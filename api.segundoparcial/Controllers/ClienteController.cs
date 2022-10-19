@@ -55,18 +55,27 @@ namespace api.segundoparcial.Controllers
         }
 
         // GET: ClienteController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
+            List<Models.clienteModel> clientes = new List<Models.clienteModel>();
+            var api = new HttpClient();
+            var json = await api.GetStringAsync("https://localhost:7196/clientes/{id}");
+            Models.clienteModel cliente = JsonConvert.DeserializeObject<Models.clienteModel>(json);
+            clientes.Add(cliente);
             return View();
         }
 
         // POST: ClienteController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, Models.clienteModel cliente)
         {
             try
             {
+                var json = JsonConvert.SerializeObject(cliente);
+                var data = new StringContent(json, Encoding.UTF8, "Application/json");
+                var api = new HttpClient();
+                var response = await api.PutAsync("https://localhost:7261/Clientes/{id}", data);
                 return RedirectToAction(nameof(IndexAsync));
             }
             catch
@@ -76,9 +85,13 @@ namespace api.segundoparcial.Controllers
         }
 
         // GET: ClienteController/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<ActionResult> Delete(int id)
         {
-            
+            List<Models.clienteModel> clientes = new List<Models.clienteModel>();
+            var api = new HttpClient();
+            var json = await api.GetStringAsync("https://localhost:7196/clientes/{id}");
+            Models.clienteModel cliente = JsonConvert.DeserializeObject<Models.clienteModel>(json);
+            clientes.Add(cliente);
             return View();
         }
 
