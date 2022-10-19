@@ -101,11 +101,11 @@ namespace api.segundoparcial.Controllers
         public async Task<ActionResult> Delete(int id, IFormCollection collection)
         {
             try
-            {
+            {  
                 if (id > 0) 
                 {
                     var api = new HttpClient();
-                    var response = await api.DeleteAsync("https://localhost:7261/Clientes/{id}");
+                    var response = await api.DeleteAsync("https://localhost:7261/clientes/{id}");
                 }
                 return RedirectToAction(nameof(IndexAsync));
             }
