@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using NuGet.Protocol;
+using System.Diagnostics;
 using System.Text;
 
 namespace api.segundoparcial.Controllers
@@ -8,25 +10,24 @@ namespace api.segundoparcial.Controllers
     public class ClienteController : Controller
     {
         // GET: ClienteController
-        public async Task<ActionResult> IndexAsync()
+        public async Task<ActionResult> Index()
         {
-            List<Models.clienteModel> clientes = new List<Models.clienteModel>();
             var api = new HttpClient();
-            var json = await api.GetStringAsync("https://localhost:7196/clientes/1");
-            Models.clienteModel cliente = JsonConvert.DeserializeObject<Models.clienteModel>(json);
-            clientes.Add(cliente);
-            return View();
+            var url = $"https://localhost:7196/cliente/";
+            var json = await api.GetAsync(url);
+            var result = await json.Content.ReadAsStringAsync();
+            IEnumerable<Models.clienteModel> clientes = JsonConvert.DeserializeObject<IEnumerable<Models.clienteModel>>(result);
+            return View(clientes);
         }
 
         // GET: ClienteController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            List<Models.clienteModel> clientes = new List<Models.clienteModel>();
             var api = new HttpClient();
-            var json = await api.GetStringAsync("https://localhost:7196/clientes/{id}");
+            var url = $"https://localhost:7196/cliente/{id}";
+            var json = await api.GetStringAsync(url);
             Models.clienteModel cliente = JsonConvert.DeserializeObject<Models.clienteModel>(json);
-            clientes.Add(cliente);
-            return View();
+            return View(cliente);
         }
 
         // GET: ClienteController/Create
@@ -43,10 +44,11 @@ namespace api.segundoparcial.Controllers
             try
             {
                 var json = JsonConvert.SerializeObject(cliente);
+                var url = $"https://localhost:7196/cliente/";
                 var data = new StringContent(json, Encoding.UTF8, "Application/json");
                 var api = new HttpClient();
-                var response = await api.PostAsync("https://localhost:7261/Clientes/", data);
-                return RedirectToAction(nameof(IndexAsync));
+                var response = await api.PostAsJsonAsync(url, data);
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -57,12 +59,11 @@ namespace api.segundoparcial.Controllers
         // GET: ClienteController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            List<Models.clienteModel> clientes = new List<Models.clienteModel>();
             var api = new HttpClient();
-            var json = await api.GetStringAsync("https://localhost:7196/clientes/{id}");
+            var url = $"https://localhost:7196/cliente/{id}";
+            var json = await api.GetStringAsync(url);
             Models.clienteModel cliente = JsonConvert.DeserializeObject<Models.clienteModel>(json);
-            clientes.Add(cliente);
-            return View();
+            return View(cliente);
         }
 
         // POST: ClienteController/Edit/5
@@ -73,10 +74,11 @@ namespace api.segundoparcial.Controllers
             try
             {
                 var json = JsonConvert.SerializeObject(cliente);
+                var url = $"https://localhost:7196/cliente/{id}";
                 var data = new StringContent(json, Encoding.UTF8, "Application/json");
                 var api = new HttpClient();
-                var response = await api.PutAsync("https://localhost:7261/Clientes/{id}", data);
-                return RedirectToAction(nameof(IndexAsync));
+                var response = await api.PutAsync(url, data);
+                return RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -87,12 +89,11 @@ namespace api.segundoparcial.Controllers
         // GET: ClienteController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            List<Models.clienteModel> clientes = new List<Models.clienteModel>();
             var api = new HttpClient();
-            var json = await api.GetStringAsync("https://localhost:7196/clientes/{id}");
+            var url = $"https://localhost:7196/cliente/{id}";
+            var json = await api.GetStringAsync(url);
             Models.clienteModel cliente = JsonConvert.DeserializeObject<Models.clienteModel>(json);
-            clientes.Add(cliente);
-            return View();
+            return View(cliente);
         }
 
         // POST: ClienteController/Delete/5
@@ -104,10 +105,11 @@ namespace api.segundoparcial.Controllers
             {  
                 if (id > 0) 
                 {
+                    var url = $"https://localhost:7196/cliente/{id}";
                     var api = new HttpClient();
-                    var response = await api.DeleteAsync("https://localhost:7261/clientes/{id}");
+                    var response = await api.DeleteAsync(url);
                 }
-                return RedirectToAction(nameof(IndexAsync));
+                return RedirectToAction(nameof(Index));
             }
             catch
             {

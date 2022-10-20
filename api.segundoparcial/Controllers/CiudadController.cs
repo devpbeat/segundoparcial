@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Text;
 
@@ -10,23 +9,22 @@ namespace api.segundoparcial.Controllers
         // GET: CiudadController
         public async Task<ActionResult> Index()
         {
-            List<Models.ciudadModel> ciudades = new List<Models.ciudadModel>();
             var api = new HttpClient();
-            var json = await api.GetStringAsync("https://localhost:7196/ciudad/");
-            Models.ciudadModel ciudad = JsonConvert.DeserializeObject<Models.ciudadModel>(json);
-            ciudades.Add(ciudad);
-            return View();
+            var url = $"https://localhost:7196/ciudad/";
+            var json = await api.GetAsync(url);
+            var result = await json.Content.ReadAsStringAsync();
+            IEnumerable<Models.ciudadModel> ciudades = JsonConvert.DeserializeObject<IEnumerable<Models.ciudadModel>>(result);
+            return View(ciudades);
         }
 
         // GET: CiudadController/Details/5
         public async Task<ActionResult> Details(int id)
         {
-            List<Models.ciudadModel> ciudades = new List<Models.ciudadModel>();
             var api = new HttpClient();
-            var json = await api.GetStringAsync("https://localhost:7196/ciudad/{id}");
+            var url = $"https://localhost:7196/ciudad/{id}";
+            var json = await api.GetStringAsync(url);
             Models.ciudadModel ciudad = JsonConvert.DeserializeObject<Models.ciudadModel>(json);
-            ciudades.Add(ciudad);
-            return View();
+            return View(ciudad);
         }
 
         // GET: CiudadController/Create
@@ -43,9 +41,10 @@ namespace api.segundoparcial.Controllers
             try
             {
                 var json = JsonConvert.SerializeObject(ciudad);
+                var url = $"https://localhost:7196/ciudad/";
                 var data = new StringContent(json, Encoding.UTF8, "Application/json");
                 var api = new HttpClient();
-                var response = await api.PostAsync("https://localhost:7261/ciudad/", data);
+                var response = await api.PostAsJsonAsync(url, data);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -57,12 +56,11 @@ namespace api.segundoparcial.Controllers
         // GET: CiudadController/Edit/5
         public async Task<ActionResult> Edit(int id)
         {
-            List<Models.ciudadModel> ciudades = new List<Models.ciudadModel>();
             var api = new HttpClient();
-            var json = await api.GetStringAsync("https://localhost:7196/clientes/{id}");
+            var url = $"https://localhost:7196/ciudad/{id}";
+            var json = await api.GetStringAsync(url);
             Models.ciudadModel ciudad = JsonConvert.DeserializeObject<Models.ciudadModel>(json);
-            ciudades.Add(ciudad);
-            return View();
+            return View(ciudad);
         }
 
         // POST: CiudadController/Edit/5
@@ -73,9 +71,11 @@ namespace api.segundoparcial.Controllers
             try
             {
                 var json = JsonConvert.SerializeObject(ciudad);
+                var url = $"https://localhost:7196/ciudad/{id}";
                 var data = new StringContent(json, Encoding.UTF8, "Application/json");
                 var api = new HttpClient();
-                var response = await api.PutAsync("https://localhost:7261/Clientes/{id}", data);
+                var response = await api.PutAsync(url, data);
+                Console.WriteLine(response);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -87,12 +87,11 @@ namespace api.segundoparcial.Controllers
         // GET: CiudadController/Delete/5
         public async Task<ActionResult> Delete(int id)
         {
-            List<Models.ciudadModel> ciudades = new List<Models.ciudadModel>();
             var api = new HttpClient();
-            var json = await api.GetStringAsync("https://localhost:7196/clientes/{id}");
+            var url = $"https://localhost:7196/ciudad/{id}";
+            var json = await api.GetStringAsync(url);
             Models.ciudadModel ciudad = JsonConvert.DeserializeObject<Models.ciudadModel>(json);
-            ciudades.Add(ciudad);
-            return View();
+            return View(ciudad);
         }
 
         // POST: CiudadController/Delete/5
@@ -104,8 +103,9 @@ namespace api.segundoparcial.Controllers
             {
                 if (id > 0)
                 {
+                    var url = $"https://localhost:7196/ciudad/{id}";
                     var api = new HttpClient();
-                    var response = await api.DeleteAsync("https://localhost:7261/clientes/{id}");
+                    var response = await api.DeleteAsync(url);
                 }
                 return RedirectToAction(nameof(Index));
             }

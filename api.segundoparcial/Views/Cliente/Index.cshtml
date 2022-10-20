@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<api.segundoparcial.Models.clienteModel>
 
 @{
-    ViewData["Title"] = "IndexAsync";
+    ViewData["Title"] = "Index";
 }
 
-<h1>IndexAsync</h1>
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -79,9 +79,9 @@
                 @Html.DisplayFor(modelItem => item.Nacionalidad)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Edit", "Edit", new {  item.id  }) |
+                @Html.ActionLink("Details", "Details", new {  item.id  }) |
+                    @Html.ActionLink("Delete", "Delete", new { item.id })
             </td>
         </tr>
 }
